@@ -17,7 +17,7 @@ public class Alumno implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    private String id;
+    private Long id;  // Cambiado de String a Long
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;
@@ -28,50 +28,32 @@ public class Alumno implements Serializable {
     public Alumno() {
     }
 
-    public Alumno(String id, String nombre, String carrera) {
+    public Alumno(Long id, String nombre, String carrera) {  // Cambiado de String a Long
         this.id = id;
         this.nombre = nombre;
         this.carrera = carrera;
     }
 
-    /**
-     * @return the id
-     */
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    /**
-     * @return the nombre
-     */
     public String getNombre() {
         return nombre;
     }
 
-    /**
-     * @param nombre the nombre to set
-     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
-    /**
-     * @return the carrerra
-     */
     public String getCarrera() {
         return carrera;
     }
 
-    /**
-     * @param carrera the carrerra to set
-     */
     public void setCarrera(String carrera) {
         this.carrera = carrera;
     }

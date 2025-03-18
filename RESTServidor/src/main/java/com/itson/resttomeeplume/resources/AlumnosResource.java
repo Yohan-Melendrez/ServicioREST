@@ -32,22 +32,20 @@ import java.util.List;
 public class AlumnosResource {
 
     @PersistenceContext(unitName = "AlumnosPU")
-    private EntityManager em;
+    private EntityManager em; 
 
+    //consultar por un parametro especifico
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAlumnos(@QueryParam("carrera") String carrera) {
+    public Response getAlumnos() {
         TypedQuery<Alumno> query;
-        if (carrera != null) {
-            query = em.createQuery("SELECT a FROM Alumno a WHERE a.carrera = :carrera", Alumno.class);
-            query.setParameter("carrera", carrera);
-        } else {
             query = em.createQuery("SELECT a FROM Alumno a", Alumno.class);
-        }
         List<Alumno> alumnos = query.getResultList();
         return Response.ok(alumnos).build();
+        
     }
 
+    //Agregar
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
@@ -55,6 +53,7 @@ public class AlumnosResource {
         em.persist(a);
         return Response.status(Response.Status.CREATED).entity(a).build();
     }
+//actualizar
 
     @PUT
     @Path("{id}")
@@ -66,12 +65,13 @@ public class AlumnosResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         a.setNombre(updatedAlumno.getNombre());
-        a.setCarrerra(updatedAlumno.getCarrerra());
+        a.setCarrera(updatedAlumno.getCarrera());
         em.merge(a);
         return Response.ok(a).build();
     }
- 
-   @DELETE
+    //borrar 
+
+    @DELETE
     @Path("{id}")
     public Response deleteAlumno(@PathParam("id") Long id) {
         Alumno a = em.find(Alumno.class, id);
@@ -80,5 +80,16 @@ public class AlumnosResource {
         }
         em.remove(a);
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getAlumnoById(@PathParam("id") Long id) {
+        Alumno a = em.find(Alumno.class, id);
+        if (a == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        return Response.ok(a).build();
     }
 }
