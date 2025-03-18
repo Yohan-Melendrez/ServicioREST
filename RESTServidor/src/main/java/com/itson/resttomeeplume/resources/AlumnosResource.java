@@ -18,8 +18,11 @@ import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,18 +34,23 @@ import java.util.List;
 @RequestScoped
 public class AlumnosResource {
 
-    @PersistenceContext(unitName = "AlumnosPU")
-    private EntityManager em; 
+    @Context
+    private UriInfo context;
+    @PersistenceContext
+    private EntityManager em;
+
+    /**
+     * Creates a new instance of AlumnosResource
+     */
+ 
 
     //consultar por un parametro especifico
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAlumnos() {
-        TypedQuery<Alumno> query;
-            query = em.createQuery("SELECT a FROM Alumno a", Alumno.class);
+        TypedQuery<Alumno> query = em.createQuery("SELECT a FROM Alumnos a", Alumno.class);
         List<Alumno> alumnos = query.getResultList();
         return Response.ok(alumnos).build();
-        
     }
 
     //Agregar
@@ -65,7 +73,6 @@ public class AlumnosResource {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
         a.setNombre(updatedAlumno.getNombre());
-        a.setCarrera(updatedAlumno.getCarrera());
         em.merge(a);
         return Response.ok(a).build();
     }
